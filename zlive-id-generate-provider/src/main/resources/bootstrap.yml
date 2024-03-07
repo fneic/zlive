@@ -1,0 +1,8 @@
+spring:
+  cloud:
+    nacos:
+      username: nacos
+      password: nacos
+      discovery:
+        server-addr: localhost:8848
+        namespace: 9fabb905-ceb0-4069-9434-ec1bbd595a64

@@ -1,0 +1,17 @@
+spring:
+  application:
+    name: zlive-id-generate-provider
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    #访问主库
+    url: jdbc:mysql://118.89.68.42:8808/zlive_common?useUnicode=true&characterEncoding=utf8
+    username: root
+    password: root
+dubbo:
+  application:
+    name: ${spring.application.name}
+    registry:
+      address: nacos://127.0.0.1:8848?namespace=9fabb905-ceb0-4069-9434-ec1bbd595a64&&username=nacos&&password=nacos
+    protocol:
+      name: dubbo
+      port: 9098

@@ -9,6 +9,8 @@
     <file url="file://$PROJECT_DIR$/zlive-framework/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/zlive-framework/zlive-framework-datasource-starter/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/zlive-framework/zlive-framework-redis-starter/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/zlive-id-generate-interface/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/zlive-id-generate-provider/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/zlive-user-interface/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/zlive-user-interface/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/zlive-user-provider/src/main/java" charset="UTF-8" />

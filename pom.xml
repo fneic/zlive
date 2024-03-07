@@ -15,6 +15,8 @@
         <module>zlive-api</module>
         <module>zlive-common</module>
         <module>zlive-framework</module>
+        <module>zlive-id-generate-interface</module>
+        <module>zlive-id-generate-provider</module>
     </modules>
 
     <properties>
@@ -22,6 +24,16 @@
         <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <springboot.version>3.0.4</springboot.version>
+        <curator.version>2.12.0</curator.version>
+        <mybatis-plus.version>3.5.3</mybatis-plus.version>
+        <druid.version>1.1.20</druid.version>
+        <sharding.jdbc.version>5.3.2</sharding.jdbc.version>
+        <hessian.version>4.0.38</hessian.version>
+        <jetty.version>9.4.28.v20200408</jetty.version>
+        <dubbo.version>3.2.0-beta.3</dubbo.version>
+        <spring-cloud-alibaba.version>2022.0.0.0-RC1</spring-cloud-alibaba.version>
+        <rocketmq.client.version>4.8.0</rocketmq.client.version>
+        <mysql.version>8.0.28</mysql.version>
     </properties>
 
     <parent>
