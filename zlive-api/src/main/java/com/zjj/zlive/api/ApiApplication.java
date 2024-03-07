@@ -17,8 +17,6 @@ public class ApiApplication {
     public static void main(String[] args) {
         SpringApplication springApplication = new SpringApplication(ApiApplication.class);
         springApplication.setWebApplicationType(WebApplicationType.SERVLET);
-        ApplicationContext applicationContext = new XmlWebApplicationContext();
-        applicationContext.getBean("");
         springApplication.run(args);
     }
 }

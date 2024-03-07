@@ -2,6 +2,9 @@ package com.zjj.zlive.user.interfaces;
 
 import com.zjj.zlive.user.dto.UserDTO;
 
+import java.util.List;
+import java.util.Map;
+
 /**
  * @author Zhou JunJie
  */
@@ -22,4 +25,11 @@ public interface IUserRpc {
      * @return
      */
     Boolean addUser(UserDTO userDTO);
+
+    /**
+     * 批量查询用户
+     * @param userIds
+     * @return
+     */
+    Map<Long,UserDTO> batchQueryUser(List<Long> userIds);
 }

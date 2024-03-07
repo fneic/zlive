@@ -14,6 +14,7 @@
         <module>zlive-user-provider</module>
         <module>zlive-api</module>
         <module>zlive-common</module>
+        <module>zlive-framework</module>
     </modules>
 
     <properties>

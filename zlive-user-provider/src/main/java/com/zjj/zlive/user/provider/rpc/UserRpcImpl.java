@@ -6,6 +6,9 @@ import com.zjj.zlive.user.provider.service.IUserService;
 import jakarta.annotation.Resource;
 import org.apache.dubbo.config.annotation.DubboService;
 
+import java.util.List;
+import java.util.Map;
+
 /**
  * @ClassName UserRpcImpl
  * @Description
@@ -31,5 +34,10 @@ public class UserRpcImpl implements IUserRpc {
     @Override
     public Boolean addUser(UserDTO userDTO) {
         return userService.addUser(userDTO);
+    }
+
+    @Override
+    public Map<Long, UserDTO> batchQueryUser(List<Long> userIds) {
+        return userService.batchQueryUser(userIds);
     }
 }

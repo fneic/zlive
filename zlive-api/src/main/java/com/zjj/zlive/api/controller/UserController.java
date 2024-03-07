@@ -8,6 +8,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+
 /**
  * @ClassName UserController
  * @Description
@@ -25,5 +29,25 @@ public class UserController {
         return userRpc.getUserById(id);
     }
 
+    @GetMapping("/insert")
+    public void insertUser(Long userId,String nickName){
+        UserDTO userDTO = new UserDTO();
+        userDTO.setUserId(userId);
+        userDTO.setNickName(nickName);
+        userRpc.addUser(userDTO);
+    }
 
+    @GetMapping("/update")
+    public void updateUser(Long userId,String nickName){
+        UserDTO userDTO = new UserDTO();
+        userDTO.setUserId(userId);
+        userDTO.setNickName(nickName);
+        userRpc.updateUserById(userDTO);
+    }
+
+    @GetMapping("/batch")
+    public Map<Long,UserDTO> batchQueryUser(String userIds){
+        List<Long> userList = Arrays.stream(userIds.split(",")).map(Long::parseLong).toList();
+        return userRpc.batchQueryUser(userList);
+    }
 }

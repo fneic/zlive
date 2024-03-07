@@ -2,6 +2,9 @@ package com.zjj.zlive.user.provider.service;
 
 import com.zjj.zlive.user.dto.UserDTO;
 
+import java.util.List;
+import java.util.Map;
+
 /**
  * @ClassName IUserService
  * @Description
@@ -9,6 +12,7 @@ import com.zjj.zlive.user.dto.UserDTO;
  * @Date 2024/3/5 23:37
  **/
 public interface IUserService {
+    String USERINFO_CACHE_PREFIX = "user-provider:userinfo:";
 
     /**
      * 通过id获取用户信息
@@ -30,4 +34,11 @@ public interface IUserService {
      * @return
      */
     Boolean addUser(UserDTO userDTO);
+
+    /**
+     * 批量查询用户
+     * @param userIds
+     * @return
+     */
+    Map<Long,UserDTO> batchQueryUser(List<Long> userIds);
 }
