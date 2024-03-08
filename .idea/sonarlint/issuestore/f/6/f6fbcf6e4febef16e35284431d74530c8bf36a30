@@ -1,3 +1,4 @@
 
-h
-java:S1128"KRemove this unused import 'org.springframework.context.ApplicationContext'.(»Ô»¿8ÂäÔôà1
+g	java:S112*"FDefine and throw a dedicated exception instead of using a generic one.(Ò‚Òéüÿÿÿÿ8¤ò´òá1
+{
+java:S2142)"^Either re-interrupt this method or rethrow the "InterruptedException" that can be caught here.(ä ¹€8Àò´òá1

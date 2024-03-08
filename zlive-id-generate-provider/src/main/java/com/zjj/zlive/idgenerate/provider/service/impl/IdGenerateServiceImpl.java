@@ -95,34 +95,39 @@ public class IdGenerateServiceImpl implements IdGenerateService , InitializingBe
         boolean acquire = semaphore.tryAcquire();
         if(acquire){
             threadPoolExecutor.execute(() -> {
-                for(int i = 0; i < 3; i++){
-                    log.info("尝试第 {} 次异步更新刷新ID，code is {}",i+1,id);
-                    IdBuilderPO idBuilderPO = idBuilderMapper.selectById(id);
-                    int updateStatus = idBuilderMapper.updateVersion(idBuilderPO.getId(), idBuilderPO.getVersion());
-                    if(updateStatus > 0){
-                        if(idBuilderPO.getIsSeq() == 0){
-                            LocalSeqIdBO localSeqIdBO = localSeqIdMap.get(id);
-                            localSeqIdBO.setNextThreshold(idBuilderPO.getNextThreshold());
-                            localSeqIdBO.setStep(idBuilderPO.getStep());
-                            AtomicLong currentValue = new AtomicLong(idBuilderPO.getCurrentStart());
-                            //todo 更新后，会损失部分的id，可以改善
-                            localSeqIdBO.setCurrentValue(currentValue);
-                            localSeqIdBO.setCurrentStart(idBuilderPO.getCurrentStart());
+                try{
+                    for(int i = 0; i < 3; i++){
+                        log.info("尝试第 {} 次异步更新刷新ID，code is {}",i+1,id);
+                        IdBuilderPO idBuilderPO = idBuilderMapper.selectById(id);
+                        int updateStatus = idBuilderMapper.updateVersion(idBuilderPO.getId(), idBuilderPO.getVersion());
+                        if(updateStatus > 0){
+                            if(idBuilderPO.getIsSeq() == 0){
+                                LocalSeqIdBO localSeqIdBO = localSeqIdMap.get(id);
+                                localSeqIdBO.setNextThreshold(idBuilderPO.getNextThreshold());
+                                localSeqIdBO.setStep(idBuilderPO.getStep());
+                                AtomicLong currentValue = new AtomicLong(idBuilderPO.getCurrentStart());
+                                //todo 更新后，会损失部分的id，可以改善
+                                localSeqIdBO.setCurrentValue(currentValue);
+                                localSeqIdBO.setCurrentStart(idBuilderPO.getCurrentStart());
+                            }
+                            else{
+                                LocalUnSeqIdBO localUnSeqIdBO = localUnSeqIdMap.get(id);
+                                localUnSeqIdBO.setStep(idBuilderPO.getStep());
+                                long currentStart = idBuilderPO.getCurrentStart();
+                                long nextThreshold = idBuilderPO.getNextThreshold();
+                                localUnSeqIdBO.setCurrentStart(currentStart);
+                                localUnSeqIdBO.setNextThreshold(nextThreshold);
+                                localUnSeqIdBO.setRandomIdInQue(currentStart,nextThreshold);
+                            }
+                            log.info("第 {} 次异步更新刷新ID成功，code is {}",i+1,id);
+                            break;
                         }
-                        else{
-                            LocalUnSeqIdBO localUnSeqIdBO = localUnSeqIdMap.get(id);
-                            localUnSeqIdBO.setStep(idBuilderPO.getStep());
-                            long currentStart = idBuilderPO.getCurrentStart();
-                            long nextThreshold = idBuilderPO.getNextThreshold();
-                            localUnSeqIdBO.setCurrentStart(currentStart);
-                            localUnSeqIdBO.setNextThreshold(nextThreshold);
-                            localUnSeqIdBO.setRandomIdInQue(currentStart,nextThreshold);
-                        }
-                        log.info("第 {} 次异步更新刷新ID成功，code is {}",i+1,id);
-                        break;
                     }
+                }catch (RuntimeException e){
+                    log.error("异步更新刷新ID失败，code is {},原因：{}",id,e.getStackTrace());
+                }finally {
+                    semaphore.release();
                 }
-                semaphore.release();
             });
         }
     }
