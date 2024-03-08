@@ -189,3 +189,16 @@ ID绝对有序、高可用
 
 本地缓存从数据库申请的ID分段（唯一），进行分发。流程图如下：
 ![img.png](pic/本地分发ID流程.png)
+
+## 利用SPI机制，二次开发ShardingJDBC
+由于ShardingJDBC本身不支持从Nacos配置中心读取配置文件信息。尝试对其源码进行扩展。
+
+观察源码发现，其利用了SPI机制动态加载类实现多种方式读取配置文件（但就是没有Nacos的）。
+利用SPI机制，对ShardingJDBC读取配置方法进行二次开发，使其能从Nacos中读取配置信息
+![img.png](img.png)
+查看接口类，只有两个接口。
+![img_1.png](img_1.png)
+其中，accept方法是判断当前URL能否被当前类读取。getContent方法是从URL解析出配置文件信息。
+于是从这两个方法入手，在getContent方法中解析Nacos地址和配置文件名，并从配置中心读取配置文件信息即可。
+
+

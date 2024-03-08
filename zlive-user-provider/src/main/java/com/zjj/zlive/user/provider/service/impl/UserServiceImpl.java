@@ -3,6 +3,7 @@ package com.zjj.zlive.user.provider.service.impl;
 import com.alibaba.fastjson2.JSON;
 import com.zjj.zlive.common.utils.ConvertBeanUtils;
 import com.zjj.zlive.user.dto.UserDTO;
+import com.zjj.zlive.user.provider.common.MqSender;
 import com.zjj.zlive.user.provider.dao.mapper.IUserMapper;
 import com.zjj.zlive.user.provider.dao.po.UserPO;
 import com.zjj.zlive.user.provider.service.IUserService;
@@ -47,7 +48,7 @@ public class UserServiceImpl implements IUserService {
     private RedisTemplate<String,UserDTO> redisTemplate;
 
     @Resource
-    private MQProducer mqProducer;
+    private MqSender mqSender;
 
 //    private final String USERINFO_CACHE_PREFIX = "user-provider:userinfo:";
 
@@ -77,16 +78,10 @@ public class UserServiceImpl implements IUserService {
         if(effect == 0){
             return false;
         }
-        redisTemplate.delete(USERINFO_CACHE_PREFIX + userDTO.getUserId());
-        Message message = new Message();
-        message.setBody(JSON.toJSONBytes(userDTO));
-        message.setTopic("user-update-cache");
-        message.setDelayTimeLevel(1);
-        try {
-            mqProducer.send(message);
-        } catch (Exception e) {
-            log.error("延迟双删失败,发送消息失败，内容：{},原因：{}",userDTO.toString(),e.getStackTrace());
-        }
+        String key = USERINFO_CACHE_PREFIX + userDTO.getUserId();
+        redisTemplate.delete(key);
+        //延迟双删
+        mqSender.sendCacheDeleteMessage(key);
         return true;
     }
 

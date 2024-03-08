@@ -3,6 +3,7 @@ package com.zjj.zlive.user.provider.config;
 import org.redisson.Redisson;
 import org.redisson.api.RedissonClient;
 import org.redisson.config.Config;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,13 +15,15 @@ import org.springframework.context.annotation.Configuration;
  * @Date 2024/3/8 21:17
  **/
 @Configuration
-@ConfigurationProperties("spring.data.redis")
 public class RedissonConfig {
 
+    @Value("${spring.data.redis.host}")
     String host;
 
+    @Value("${spring.data.redis.port}")
     String port;
 
+    @Value("${spring.data.redis.password}")
     String password;
 
     @Bean

@@ -2,10 +2,10 @@ package com.zjj.zlive.user.provider.config;
 
 import com.alibaba.fastjson.JSON;
 import com.zjj.zlive.user.dto.UserDTO;
+import com.zjj.zlive.user.provider.common.MQConstant;
 import com.zjj.zlive.user.provider.service.IUserService;
 import jakarta.annotation.Resource;
 import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
-import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyContext;
 import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyStatus;
 import org.apache.rocketmq.client.consumer.listener.MessageListenerConcurrently;
 import org.apache.rocketmq.client.exception.MQClientException;
@@ -16,8 +16,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.core.RedisTemplate;
-
-import java.util.List;
 
 /**
  * @ClassName RocketMQConsumerConfig
@@ -47,18 +45,12 @@ public class RocketMQConsumerConfig implements InitializingBean {
         //每次消费一条消息
         defaultMQPushConsumer.setConsumeMessageBatchMaxSize(1);
         defaultMQPushConsumer.setConsumeFromWhere(ConsumeFromWhere.CONSUME_FROM_FIRST_OFFSET);
-        defaultMQPushConsumer.subscribe("user-update-cache", "*");
+        defaultMQPushConsumer.subscribe(MQConstant.DELETE_CACHE_TOPIC, "*");
         defaultMQPushConsumer.setMessageListener((MessageListenerConcurrently) (list, consumeConcurrentlyContext) -> {
             MessageExt messageExt = list.get(0);
-            String msg = new String(messageExt.getBody());
-            UserDTO userDTO = JSON.parseObject(msg, UserDTO.class);
-            if(userDTO == null || userDTO.getUserId() == null){
-                LOGGER.error("用户id为空，参数异常，内容：{}",msg);
-                return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
-            }
-            String key = IUserService.USERINFO_CACHE_PREFIX + userDTO.getUserId();
+            String key = new String(messageExt.getBody());
             redisTemplate.delete(key);
-            LOGGER.info("延迟双删处理，信息：{}",msg);
+            LOGGER.info("延迟双删处理，key：{}",key);
             return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
         });
         defaultMQPushConsumer.start();

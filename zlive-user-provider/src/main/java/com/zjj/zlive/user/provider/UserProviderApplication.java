@@ -33,18 +33,7 @@ public class UserProviderApplication implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        CountDownLatch countDownLatch = new CountDownLatch(1);
-        for (int i = 0; i < 100; i++) {
-            new Thread(() -> {
-                try {
-                    countDownLatch.await();
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
-                userTagService.setTag(10002L,UserTagsEnum.IS_OLD_USER);
-            }).start();
-        }
-        countDownLatch.countDown();
-        Thread.sleep(10000);
+        boolean b = userTagService.containsTag(10002L, UserTagsEnum.IS_OLD_USER);
+        boolean b1 = userTagService.setTag(10002L, UserTagsEnum.IS_VIP);
     }
 }
